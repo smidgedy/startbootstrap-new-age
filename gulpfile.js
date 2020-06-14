@@ -12,6 +12,7 @@ const plumber = require("gulp-plumber");
 const rename = require("gulp-rename");
 const sass = require("gulp-sass");
 const uglify = require("gulp-uglify");
+const surge = require('gulp-surge');
 
 // Load package.json for banner
 const pkg = require('./package.json');
@@ -29,7 +30,7 @@ const banner = ['/*!\n',
 function browserSync(done) {
   browsersync.init({
     server: {
-      baseDir: "./"
+      baseDir: "./dist/"
     },
     port: 3000
   });
@@ -44,35 +45,43 @@ function browserSyncReload(done) {
 
 // Clean vendor
 function clean() {
-  return del(["./vendor/"]);
+  return del(["./dist/"]);
 }
 
 // Bring third party dependencies from node_modules into vendor directory
 function modules() {
   // Bootstrap
   var bootstrap = gulp.src('./node_modules/bootstrap/dist/**/*')
-    .pipe(gulp.dest('./vendor/bootstrap'));
+    .pipe(gulp.dest('./dist/vendor/bootstrap'));
   // Font Awesome CSS
   var fontAwesomeCSS = gulp.src('./node_modules/@fortawesome/fontawesome-free/css/**/*')
-    .pipe(gulp.dest('./vendor/fontawesome-free/css'));
+    .pipe(gulp.dest('./dist/vendor/fontawesome-free/css'));
   // Font Awesome Webfonts
   var fontAwesomeWebfonts = gulp.src('./node_modules/@fortawesome/fontawesome-free/webfonts/**/*')
-    .pipe(gulp.dest('./vendor/fontawesome-free/webfonts'));
+    .pipe(gulp.dest('./dist/vendor/fontawesome-free/webfonts'));
   // jQuery Easing
   var jqueryEasing = gulp.src('./node_modules/jquery.easing/*.js')
-    .pipe(gulp.dest('./vendor/jquery-easing'));
+    .pipe(gulp.dest('./dist/vendor/jquery-easing'));
   // jQuery
   var jquery = gulp.src([
       './node_modules/jquery/dist/*',
       '!./node_modules/jquery/dist/core.js'
     ])
-    .pipe(gulp.dest('./vendor/jquery'));
+    .pipe(gulp.dest('./dist/vendor/jquery'));
   // Simple Line Icons
   var simpleLineIconsFonts = gulp.src('./node_modules/simple-line-icons/fonts/**')
-    .pipe(gulp.dest('./vendor/simple-line-icons/fonts'));
+    .pipe(gulp.dest('./dist/vendor/simple-line-icons/fonts'));
   var simpleLineIconsCSS = gulp.src('./node_modules/simple-line-icons/css/**')
-    .pipe(gulp.dest('./vendor/simple-line-icons/css'));
-  return merge(bootstrap, fontAwesomeCSS, fontAwesomeWebfonts, jquery, jqueryEasing, simpleLineIconsFonts, simpleLineIconsCSS);
+    .pipe(gulp.dest('./dist/vendor/simple-line-icons/css'));
+
+  // also copy the theme stuff
+  var styles  = gulp.src('./css/**/*').pipe(gulp.dest('./dist/css'));
+  var fonts  = gulp.src('./fonts/**/*').pipe(gulp.dest('./dist/fonts'));
+  var img  = gulp.src('./img/**/*').pipe(gulp.dest('./dist/img'));
+  var js  = gulp.src('./js/**/*').pipe(gulp.dest('./dist/js'));
+  var devices = gulp.src('./device-mockups/**/*').pipe(gulp.dest('./dist/device-mockups'));
+  var html = gulp.src('./*.html').pipe(gulp.dest('./dist'));
+  return merge(bootstrap, fontAwesomeCSS, fontAwesomeWebfonts, jquery, jqueryEasing, simpleLineIconsFonts, simpleLineIconsCSS, styles, fonts, img, js, devices, html);
 }
 
 // CSS task
@@ -125,15 +134,24 @@ function watchFiles() {
   gulp.watch("./**/*.html", browserSyncReload);
 }
 
+function deployToSurge() {
+  return surge({
+    project: './dist',
+    domain: 'bumblr.ml'
+  });
+}
+
 // Define complex tasks
 const vendor = gulp.series(clean, modules);
-const build = gulp.series(vendor, gulp.parallel(css, js));
+const build = gulp.series(gulp.parallel(css, js), vendor);
 const watch = gulp.series(build, gulp.parallel(watchFiles, browserSync));
+const deploy = gulp.series(clean, build, deployToSurge);
 
 // Export tasks
 exports.css = css;
 exports.js = js;
 exports.clean = clean;
+exports.deploy = deploy;
 exports.vendor = vendor;
 exports.build = build;
 exports.watch = watch;
