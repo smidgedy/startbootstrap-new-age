@@ -45,7 +45,7 @@ function browserSyncReload(done) {
 
 // Clean vendor
 function clean() {
-  return del(["./dist/", "./css/"]);
+  return del(["./dist/", "./css/", "./js/new-age.min.js"]);
 }
 
 // Bring third party dependencies from node_modules into vendor directory
@@ -142,10 +142,10 @@ function deployToSurge() {
 }
 
 // Define complex tasks
-const vendor = gulp.series(clean, modules);
-const build = gulp.series(gulp.parallel(css, js), vendor);
+const vendor = gulp.series(modules);
+const build = gulp.series(clean, gulp.parallel(css, js), vendor);
 const watch = gulp.series(build, gulp.parallel(watchFiles, browserSync));
-const deploy = gulp.series(clean, build, deployToSurge);
+const deploy = gulp.series(build, deployToSurge);
 
 // Export tasks
 exports.css = css;
