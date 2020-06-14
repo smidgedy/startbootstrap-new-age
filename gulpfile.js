@@ -45,7 +45,7 @@ function browserSyncReload(done) {
 
 // Clean vendor
 function clean() {
-  return del(["./dist/"]);
+  return del(["./dist/", "./css/"]);
 }
 
 // Bring third party dependencies from node_modules into vendor directory
