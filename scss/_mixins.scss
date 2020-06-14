@@ -77,3 +77,7 @@
     letter-spacing: 2px;
     text-transform: uppercase;
 }
+
+@mixin site-logo {
+    font-family: 'bookman old style bold', 'times new roman', serif;
+}

@@ -1,0 +1,9 @@
+.btn-primary {
+  background-color: $theme-primary;
+  border-color: $theme-primary;
+
+  &:hover {
+    background-color: $theme-secondary;
+    border-color: $theme-secondary;
+  }
+}

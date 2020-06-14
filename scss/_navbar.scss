@@ -6,7 +6,7 @@
     @include heading-font;
     .navbar-brand {
         color: $theme-primary;
-        @include heading-font;
+        @include site-logo;
         &:hover,
         &:focus {
             color: darken($theme-primary, 10%);

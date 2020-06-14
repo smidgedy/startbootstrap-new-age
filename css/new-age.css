@@ -1,8 +1,29 @@
 /*!
  * Start Bootstrap - New Age v5.0.7 (https://startbootstrap.com/template-overviews/new-age)
- * Copyright 2013-2019 Start Bootstrap
+ * Copyright 2013-2020 Start Bootstrap
  * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-new-age/blob/master/LICENSE)
  */
+
+@font-face {
+  font-family: 'bookman old style bold';
+  src: url("../fonts/BOOKOSB.TTF");
+  font-weight: bold;
+  font-style: normal;
+}
+
+.site-logo {
+  font-family: 'bookman old style bold';
+}
+
+.btn-primary {
+  background-color: #fdcc52;
+  border-color: #fdcc52;
+}
+
+.btn-primary:hover {
+  background-color: #7b4397;
+  border-color: #7b4397;
+}
 
 html,
 body {
@@ -70,9 +91,7 @@ section h2 {
 
 #mainNav .navbar-brand {
   color: #fdcc52;
-  font-family: 'Catamaran', 'Helvetica', 'Arial', 'sans-serif';
-  font-weight: 200;
-  letter-spacing: 1px;
+  font-family: 'bookman old style bold', 'times new roman', serif;
 }
 
 #mainNav .navbar-brand:hover, #mainNav .navbar-brand:focus {
@@ -167,7 +186,8 @@ header.masthead .header-content {
 }
 
 header.masthead .header-content h1 {
-  font-size: 30px;
+  font-size: 42px;
+  font-family: 'bookman old style bold', 'times new roman', serif;
 }
 
 header.masthead .device-container {
@@ -192,7 +212,7 @@ header.masthead .device-container .screen img {
     text-align: left;
   }
   header.masthead .header-content h1 {
-    font-size: 50px;
+    font-size: 72px;
   }
   header.masthead .device-container {
     max-width: 325px;
